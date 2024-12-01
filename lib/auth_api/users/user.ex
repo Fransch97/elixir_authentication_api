@@ -8,15 +8,15 @@ defmodule AuthApi.Users.User do
     field :full_name, :string
     field :gender, :string
     field :biography, :string
-    field :account_id, :binary_id
     belongs_to :account, AuthApi.Accounts.Account
+
     timestamps(type: :utc_datetime)
   end
 
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:full_name, :gender, :biography])
-    |> validate_required([:full_name, :gender, :biography])
+    |> cast(attrs, [:full_name, :gender, :biography, :account_id])
+    |> validate_required([:account_id])
   end
 end
