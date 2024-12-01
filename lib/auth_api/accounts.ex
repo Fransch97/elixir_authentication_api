@@ -38,6 +38,23 @@ defmodule AuthApi.Accounts do
   def get_account!(id), do: Repo.get!(Account, id)
 
   @doc """
+  Gets a single account.any()
+  Returns nil if Account does not exist.
+  ##Example
+    iex> get_account_by_email(field: value)
+    %Account{}
+
+    iex> get_account_by_email(field: bad_value)
+    nil
+  """
+  def get_account_by_email(email) do
+    Account
+    |>where(email: ^email)
+    |> Repo.one()
+
+  end
+
+  @doc """
   Creates a account.
 
   ## Examples
