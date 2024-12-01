@@ -1,4 +1,5 @@
 defmodule AuthApiWeb.Router do
+  alias Supervisor.Default
   use AuthApiWeb, :router
 
   pipeline :api do
@@ -7,6 +8,8 @@ defmodule AuthApiWeb.Router do
 
   scope "/api", AuthApiWeb do
     pipe_through :api
+
+    get "/", DefaultController, :index
   end
 
   # Enable LiveDashboard in development
