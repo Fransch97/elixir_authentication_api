@@ -1,4 +1,5 @@
 defmodule AuthApi.Accounts.Account do
+  alias ElixirSense.Plugins.Ecto
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -18,5 +19,13 @@ defmodule AuthApi.Accounts.Account do
     |> validate_required([:email, :hash_password])
     |> validate_format(:email, ~r/^[^\s]+@[^\s]+\.[^\s]+$/, message: "must be a valid email address")
     |> unique_constraint(:email)
+    |> put_password_hash()
   end
+
+  defp put_password_hash(%Ecto.Changeset{valid?: true, changes: %{hash_password: hash_password} = changeset}) do
+    change(changeset, hash_password: Bcrypt.hash_pwd_salt(hash_password))
+  end
+
+  defp put_password_hash(changeset), do: changeset
+
 end
