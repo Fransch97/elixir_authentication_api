@@ -7,7 +7,7 @@ defmodule AuthApi.Accounts.Account do
   schema "accounts" do
     field :email, :string
     field :hash_password, :string
-
+    has_one :user, AuthApi.Users.User
     timestamps(type: :utc_datetime)
   end
 

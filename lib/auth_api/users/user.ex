@@ -9,7 +9,7 @@ defmodule AuthApi.Users.User do
     field :gender, :string
     field :biography, :string
     field :account_id, :binary_id
-
+    belongs_to :account, AuthApi.Accounts.Account
     timestamps(type: :utc_datetime)
   end
 
