@@ -17,6 +17,6 @@ defmodule AuthApi.Accounts.Account do
     |> cast(attrs, [:email, :hash_password])
     |> validate_required([:email, :hash_password])
     |> validate_format(:email, ~r/^[^\s]+@[^\s]+\.[^\s]+$/, message: "must be a valid email address")
-    |> unique_contraint(:email)
+    |> unique_constraint(:email)
   end
 end
