@@ -34,7 +34,7 @@ defmodule AuthApi.Auth.Guardian do
   end
 
   defp validate_password(password, hash_password) do
-    Bcrypt.verifiy_oass(password, hash_password)
+    Bcrypt.verify_pass(password, hash_password)
   end
 
   defp create_token(account) do
