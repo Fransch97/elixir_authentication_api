@@ -6,7 +6,7 @@ defmodule AuthApiWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/api", AuthApiWeb do
+  scope "/", AuthApiWeb do
     pipe_through :api
 
     get "/", DefaultController, :index
