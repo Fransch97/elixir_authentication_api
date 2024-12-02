@@ -1,8 +1,9 @@
 defmodule AuthApiWeb.AccountController do
   use AuthApiWeb, :controller
 
-  alias AuthApi.Auth.Guardian
+  alias AuthApiWeb.Auth.Guardian
   alias AuthApi.{Accounts, Accounts.Account, Users, Users.User}
+  alias AuthApiWeb.{Auth.Guardian, Auth.ErrorResponse}
 
   action_fallback AuthApiWeb.FallbackController
   plug :put_view, json: AuthApiWeb.Json.AccountJSON
@@ -25,8 +26,18 @@ defmodule AuthApiWeb.AccountController do
 
   def create(conn, _params) do
     conn
-    |> put_status(:unprocessable_entity) # HTTP 422
+    |> put_status(:unprocessable_entity)
     |> json(%{error: "Wrong request"})
+  end
+
+  def sign_in(conn, %{"email" => email, "hash_password" => password}) do
+    case Guardian.authenticate(email, password) do
+      {:ok, account, token} ->
+        conn
+        |> put_status(:ok)
+        |> render(:account_token, account: account, token: token)
+      {:error, :unauthorized} -> raise ErrorResponse.Unauthorized, message: "email or password wrong."
+    end
   end
 
 

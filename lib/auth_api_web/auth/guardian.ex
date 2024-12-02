@@ -1,4 +1,4 @@
-defmodule AuthApi.Auth.Guardian do
+defmodule AuthApiWeb.Auth.Guardian do
   use Guardian, otp_app: :auth_api
   alias AuthApi.Accounts
 

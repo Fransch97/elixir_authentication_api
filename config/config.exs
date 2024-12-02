@@ -27,7 +27,7 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
-config :auth_api, AuthApi.Auth.Guardian,
+config :auth_api, AuthApiWeb.Auth.Guardian,
   issuer: "auth_api",
   secret_key: "6Xi95/Voy4/gp09A0TQdqxgk6/R3NOlTs/y74SpB0IYM+FaxkN3PeVikd8XAB614"
 
