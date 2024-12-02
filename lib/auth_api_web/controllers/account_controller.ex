@@ -5,6 +5,7 @@ defmodule AuthApiWeb.AccountController do
   alias AuthApi.{Accounts, Accounts.Account, Users, Users.User}
 
   action_fallback AuthApiWeb.FallbackController
+  plug :put_view, json: AuthApiWeb.Json.AccountJSON
 
   def index(conn, _params) do
     accounts = Accounts.list_accounts()
