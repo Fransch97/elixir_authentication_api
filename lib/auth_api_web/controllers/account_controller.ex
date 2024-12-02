@@ -1,8 +1,8 @@
 defmodule AuthApiWeb.AccountController do
   use AuthApiWeb, :controller
 
-  alias AuthApi.Accounts
-  alias AuthApi.Accounts.Account
+  alias AuthApi.Auth.Guardian
+  alias AuthApi.{Accounts, Accounts.Account, Users, Users.User}
 
   action_fallback AuthApiWeb.FallbackController
 
@@ -12,11 +12,13 @@ defmodule AuthApiWeb.AccountController do
   end
 
   def create(conn, %{"account" => account_params}) do
-    with {:ok, %Account{} = account} <- Accounts.create_account(account_params) do
+    with {:ok, %Account{} = account} <- Accounts.create_account(account_params),
+      {:ok, token, _claims} <- Guardian.encode_and_sign(account),
+      {:ok, %User{} = _user} <- Users.create_user(account, account_params) do
       conn
       |> put_status(:created)
       |> put_resp_header("location", ~p"/api/accounts/#{account}")
-      |> render(:show, account: account)
+      |> render(:account_token, account: account, token: token)
     end
   end
 

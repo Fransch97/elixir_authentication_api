@@ -10,7 +10,7 @@ defmodule AuthApiWeb.FallbackController do
   def call(conn, {:error, %Ecto.Changeset{} = changeset}) do
     conn
     |> put_status(:unprocessable_entity)
-    |> put_view(json: AuthApiWeb.ChangesetJSON)
+    |> put_view(json: AuthApiWeb.Json.ChangesetJSON)
     |> render(:error, changeset: changeset)
   end
 
@@ -18,7 +18,7 @@ defmodule AuthApiWeb.FallbackController do
   def call(conn, {:error, :not_found}) do
     conn
     |> put_status(:not_found)
-    |> put_view(html: AuthApiWeb.ErrorHTML, json: AuthApiWeb.ErrorJSON)
+    |> put_view(html: AuthApiWeb.ErrorHTML, json: AuthApiWeb.Json.ErrorJSON)
     |> render(:"404")
   end
 end

@@ -1,4 +1,4 @@
-defmodule AuthApiWeb.Json.AccountJSON do
+defmodule AuthApiWeb.AccountJSON do
   alias AuthApi.Accounts.Account
 
   @doc """
@@ -20,6 +20,14 @@ defmodule AuthApiWeb.Json.AccountJSON do
       id: account.id,
       email: account.email,
       hash_password: account.hash_password
+    }
+  end
+
+  def account_token(%{account: account, token: token}) do
+    %{
+      id: account.id,
+      email: account.email,
+      token: token
     }
   end
 end
