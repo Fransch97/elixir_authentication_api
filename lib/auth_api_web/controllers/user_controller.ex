@@ -5,7 +5,7 @@ defmodule AuthApiWeb.UserController do
   alias AuthApi.Users.User
 
   action_fallback AuthApiWeb.FallbackController
-
+  plug :put_view, json: AuthApiWeb.Json.UserJSON
   def index(conn, _params) do
     users = Users.list_users()
     render(conn, :index, users: users)
