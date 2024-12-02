@@ -20,6 +20,12 @@ defmodule AuthApiWeb.UserController do
     end
   end
 
+  def create(conn, _params) do
+    conn
+    |> put_status(:unprocessable_entity) # HTTP 422
+    |> json(%{error: "Wrong request"})
+  end
+
   def show(conn, %{"id" => id}) do
     user = Users.get_user!(id)
     render(conn, :show, user: user)
