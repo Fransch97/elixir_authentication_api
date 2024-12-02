@@ -1,4 +1,4 @@
-defmodule AuthApiWeb.UserJSON do
+defmodule AuthApiWeb.Json.UserJSON do
   alias AuthApi.Users.User
 
   @doc """

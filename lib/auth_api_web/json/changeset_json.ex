@@ -1,4 +1,4 @@
-defmodule AuthApiWeb.ChangesetJSON do
+defmodule AuthApiWeb.Json.ChangesetJSON do
   @doc """
   Renders changeset errors.
   """
