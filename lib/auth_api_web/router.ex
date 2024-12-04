@@ -37,6 +37,7 @@ defmodule AuthApiWeb.Router do
     pipe_through [:api, :auth]
 
     get "/account", AccountController, :show
+    post "/account/update", AccountController, :update
   end
 
   # Enable LiveDashboard in development
