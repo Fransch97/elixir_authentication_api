@@ -17,6 +17,12 @@ defmodule AuthApiWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug :fetch_session
+  end
+
+  pipeline :auth do
+    plug AuthApiWeb.Auth.Pipeline
+    plug AuthApiWeb.Auth.SetAccount
   end
 
   scope "/", AuthApiWeb do
@@ -25,6 +31,12 @@ defmodule AuthApiWeb.Router do
     get "/", DefaultController, :index
     post "/accounts/create", AccountController, :create
     post "/accounts/sign_in", AccountController, :sign_in
+  end
+
+  scope "/", AuthApiWeb do
+    pipe_through [:api, :auth]
+
+    get "/account", AccountController, :show
   end
 
   # Enable LiveDashboard in development
