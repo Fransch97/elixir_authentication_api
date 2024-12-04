@@ -16,7 +16,7 @@ defmodule AuthApiWeb.AccountController do
     if conn.assigns.account.id == account.id do
       conn
     else
-      ErrorResponse.Forbidden
+      raise ErrorResponse.Forbidden
     end
   end
 
