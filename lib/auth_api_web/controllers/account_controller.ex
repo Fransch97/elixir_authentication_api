@@ -64,6 +64,25 @@ defmodule AuthApiWeb.AccountController do
     |> render(:account_token, account: account, token: nil)
   end
 
+  def refresh_session(conn, %{}) do
+    old_token = Guardian.Plug.current_token(conn)
+    case Guardian.decode_and_verify(old_token) do
+      {:ok, claims} ->
+        case Guardian.resource_from_claims(claims) do
+          {:ok, account} ->
+            {:ok, _old, {new_token, _new_claims}} = Guardian.refresh(old_token)
+            conn
+            |> Plug.Conn.put_session(:account_id, account.id)
+            |> put_status(:ok)
+            |> render(:account_token, account: account, token: new_token)
+          {:error, _reasons} ->
+            raise ErrorResponse.NotFound
+
+        end
+      {:error, _reason} ->
+        raise ErrorResponse.NotFound
+    end
+  end
 
   def show(conn, _shit) do
     render(conn, :show, account: conn.assigns.account)

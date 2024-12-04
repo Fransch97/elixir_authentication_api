@@ -37,6 +37,7 @@ defmodule AuthApiWeb.Router do
     pipe_through [:api, :auth]
 
     get "/account", AccountController, :show
+    get "/account/refresh_session", AccountController, :refresh_session
     get "/account/sign_out", AccountController, :sign_out
     post "/account/update", AccountController, :update
   end
