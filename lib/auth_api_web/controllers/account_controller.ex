@@ -27,22 +27,17 @@ defmodule AuthApiWeb.AccountController do
 
   def create(conn, %{"account" => account_params}) do
     with {:ok, %Account{} = account} <- Accounts.create_account(account_params),
-      {:ok, token, _claims} <- Guardian.encode_and_sign(account),
-      {:ok, %User{} = _user} <- Users.create_user(account, account_params) do
-      conn
-      |> put_status(:created)
-      |> put_resp_header("location", ~p"/api/accounts/#{account}")
-      |> render(:account_token, account: account, token: token)
+      {:ok, %User{} = _user} <- Users.create_user(account, account_params)
+    do
+      authorize_account(conn, account.email, account_params["hash_password"])
     end
   end
 
-  def create(conn, _params) do
-    conn
-    |> put_status(:unprocessable_entity)
-    |> json(%{error: "Wrong request"})
+  def sign_in(conn, %{"email" => email, "hash_password" => password}) do
+    authorize_account(conn, email, password)
   end
 
-  def sign_in(conn, %{"email" => email, "hash_password" => password}) do
+  defp authorize_account(conn, email, password) do
     case Guardian.authenticate(email, password) do
       {:ok, account, token} ->
         conn
@@ -65,23 +60,12 @@ defmodule AuthApiWeb.AccountController do
   end
 
   def refresh_session(conn, %{}) do
-    old_token = Guardian.Plug.current_token(conn)
-    case Guardian.decode_and_verify(old_token) do
-      {:ok, claims} ->
-        case Guardian.resource_from_claims(claims) do
-          {:ok, account} ->
-            {:ok, _old, {new_token, _new_claims}} = Guardian.refresh(old_token)
-            conn
-            |> Plug.Conn.put_session(:account_id, account.id)
-            |> put_status(:ok)
-            |> render(:account_token, account: account, token: new_token)
-          {:error, _reasons} ->
-            raise ErrorResponse.NotFound
-
-        end
-      {:error, _reason} ->
-        raise ErrorResponse.NotFound
-    end
+    token = Guardian.Plug.current_token(conn)
+    {:ok, account, new_token} = Guardian.authenticate(token)
+    conn
+    |> Plug.Conn.put_session(:account_id, account.id)
+    |> put_status(:ok)
+    |> render(:account_token, account: account, token: new_token)
   end
 
   def show(conn, _shit) do
